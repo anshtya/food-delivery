@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Food Delivery"
-include ':app'
+include(":app")
