@@ -5,6 +5,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.ShoppingCart
+import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material.icons.rounded.ShoppingCart
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -12,23 +15,32 @@ import com.anshtya.fooddelivery.R
 
 enum class HomeSections(
     @StringRes val title: Int,
-    val icon: ImageVector,
+    val defaultIcon: ImageVector,
+    val selectedIcon: ImageVector,
     val route: String
 ) {
-    FEED(R.string.home_feed, Icons.Outlined.Home, "home/feed"),
-    SEARCH(R.string.home_search, Icons.Outlined.Search, "home/search"),
-    CART(R.string.home_cart, Icons.Outlined.ShoppingCart, "home/cart"),
+    FEED(R.string.home_feed, Icons.Outlined.Home, Icons.Rounded.Home, "home/feed"),
+    SEARCH(R.string.home_search, Icons.Outlined.Search, Icons.Rounded.Search, "home/search"),
+    CART(R.string.home_cart, Icons.Outlined.ShoppingCart, Icons.Rounded.ShoppingCart, "home/cart"),
 }
 
-fun NavGraphBuilder.homeGraph() {
+fun NavGraphBuilder.homeGraph(
+    onFoodClick: (Int) -> Unit
+) {
     composable(route = HomeSections.FEED.route) {
-        Feed()
+        Feed(
+            onFoodClick = onFoodClick
+        )
     }
     composable(route = HomeSections.SEARCH.route) {
-        Search()
+        Search(
+            onFoodClick = onFoodClick
+        )
     }
     composable(route = HomeSections.CART.route) {
-        Cart()
+        Cart(
+            onFoodClick = onFoodClick
+        )
     }
 }
 

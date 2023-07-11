@@ -3,10 +3,14 @@ package com.anshtya.fooddelivery.ui
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.anshtya.fooddelivery.ui.components.FoodDeliveryBottomNavBar
@@ -25,9 +29,22 @@ object Destinations {
 fun FoodDeliveryApp() {
     FoodDeliveryTheme {
         val navController: NavHostController = rememberNavController()
+        val backStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = backStackEntry?.destination?.route
+        val homeSectionsRoutes = remember { HomeSections.values().map { it.route } }
         Scaffold(
             bottomBar = {
-                FoodDeliveryBottomNavBar()
+                if (currentRoute in homeSectionsRoutes) {
+                    FoodDeliveryBottomNavBar(
+                        currentRoute = currentRoute,
+                        onItemClick = {
+                            navController.navigate(it) {
+                                popUpTo(navController.graph.findStartDestination().id)
+                                launchSingleTop = true
+                            }
+                        }
+                    )
+                }
             }
         ) { innerPadding ->
             NavHost(
@@ -39,13 +56,15 @@ fun FoodDeliveryApp() {
                     route = Destinations.HOME_ROUTE,
                     startDestination = HomeSections.FEED.route
                 ) {
-                    homeGraph()
+                    homeGraph(
+                        onFoodClick = { id -> navController.navigate("${Destinations.FOOD_DETAIL_ROUTE}/${id}") }
+                    )
                 }
                 composable(
                     route = "${Destinations.FOOD_DETAIL_ROUTE}/{${Destinations.FOOD_ID}}"
                 ) { backStackEntry ->
                     FoodDetail(
-                        foodId = backStackEntry.arguments?.getInt(Destinations.FOOD_ID) ?: 0
+                        foodId = backStackEntry.arguments?.getString(Destinations.FOOD_ID) ?: ""
                     )
                 }
             }
