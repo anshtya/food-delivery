@@ -15,7 +15,7 @@ val foodList: List<Food> = listOf(
     Food(
         id = 1,
         name = "Burger",
-        image = "https://source.unsplash.com/E94j3rMcxlw",
+        image = "https://source.unsplash.com/5ZR4DxAG3RQ",
         rating = 4.5,
         price = 5.99
     ),
@@ -59,7 +59,7 @@ val foodList: List<Food> = listOf(
     Food(
         id = 7,
         name = "Tacos",
-        image = "https://source.unsplash.com/61wG5-SAF_Y",
+        image = "https://source.unsplash.com/wIqpmuOloVA",
         rating = 4.0,
         price = 4.99
     ),
@@ -97,7 +97,7 @@ val foodList: List<Food> = listOf(
     Food(
         id = 12,
         name = "Popcorn",
-        image = "https://source.unsplash.com/PvAAYZx-yf8",
+        image = "https://source.unsplash.com/Bz-eN8FoVPE",
         rating = 3.0,
         type = "Snacks",
         price = 1.99
@@ -113,7 +113,7 @@ val foodList: List<Food> = listOf(
     Food(
         id = 14,
         name = "Donuts",
-        image = "https://source.unsplash.com/emQK9lB1sns",
+        image = "https://source.unsplash.com/Ic0E0y6Zo20",
         rating = 4.1,
         type = "Desserts",
         price = 2.99

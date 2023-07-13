@@ -1,6 +1,7 @@
 package com.anshtya.fooddelivery.data
 
-object repository {
-    val list: List<Food> = foodList
+object Repository {
+    fun getFoodItems(): List<Food> = foodList
+    fun getFilters(): List<String> = filters
     fun getFood(foodId: Int): Food = foodList.find { it.id == foodId }!!
 }
