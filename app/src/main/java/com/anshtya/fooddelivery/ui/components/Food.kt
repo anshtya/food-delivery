@@ -51,6 +51,7 @@ fun FoodItem(
             )
             FoodDescription(
                 name = item.name,
+                price = item.price,
                 rating = item.rating,
                 type = item.type,
                 modifier = Modifier.padding(10.dp)
@@ -84,6 +85,7 @@ fun FoodImage(
 @Composable
 fun FoodDescription(
     name: String,
+    price: Double,
     rating: Double,
     type: String,
     modifier: Modifier = Modifier
@@ -99,12 +101,16 @@ fun FoodDescription(
             Text(
                 text = name,
                 fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.headlineSmall
+                style = MaterialTheme.typography.titleLarge
             )
             FoodRatingSurface(
                 rating = rating
             )
         }
+        Text(
+            text = "$$price",
+            style = MaterialTheme.typography.titleSmall
+        )
         if (type.isNotEmpty()) {
             Text(
                 text = type,
