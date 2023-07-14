@@ -1,19 +1,17 @@
 package com.anshtya.fooddelivery.ui
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
-import com.anshtya.fooddelivery.ui.components.FoodDeliveryBottomNavBar
 import com.anshtya.fooddelivery.ui.screens.fooddetail.FoodDetail
 import com.anshtya.fooddelivery.ui.screens.home.HomeSections
 import com.anshtya.fooddelivery.ui.screens.home.homeGraph
@@ -29,35 +27,25 @@ object Destinations {
 fun FoodDeliveryApp() {
     FoodDeliveryTheme {
         val navController: NavHostController = rememberNavController()
-        val backStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = backStackEntry?.destination?.route
-        val homeSectionsRoutes = remember { HomeSections.values().map { it.route } }
-        Scaffold(
-            bottomBar = {
-                if (currentRoute in homeSectionsRoutes) {
-                    FoodDeliveryBottomNavBar(
-                        currentRoute = currentRoute,
-                        onItemClick = {
-                            navController.navigate(it) {
-                                popUpTo(navController.graph.findStartDestination().id)
-                                launchSingleTop = true
-                            }
-                        }
-                    )
-                }
-            }
-        ) { innerPadding ->
+        Surface(
+            color = MaterialTheme.colorScheme.background,
+            modifier = Modifier.fillMaxSize()
+        ) {
             NavHost(
                 navController = navController,
-                startDestination = Destinations.HOME_ROUTE,
-                modifier = Modifier.padding(innerPadding)
+                startDestination = Destinations.HOME_ROUTE
             ) {
                 navigation(
                     route = Destinations.HOME_ROUTE,
                     startDestination = HomeSections.FEED.route
                 ) {
                     homeGraph(
-                        onFoodClick = { id -> navController.navigate("${Destinations.FOOD_DETAIL_ROUTE}/${id}") }
+                        onFoodClick = { id ->
+                            navController.navigateToFoodDetail(id)
+                        },
+                        onItemClick = {
+                            navController.navigateToBottomBarRoute(it)
+                        }
                     )
                 }
                 composable(
@@ -70,4 +58,15 @@ fun FoodDeliveryApp() {
             }
         }
     }
+}
+
+fun NavController.navigateToBottomBarRoute(route: String) {
+    navigate(route) {
+        popUpTo(graph.findStartDestination().id)
+        launchSingleTop = true
+    }
+}
+
+fun NavController.navigateToFoodDetail(id: Int) {
+    navigate("${Destinations.FOOD_DETAIL_ROUTE}/${id}")
 }

@@ -25,21 +25,25 @@ enum class HomeSections(
 }
 
 fun NavGraphBuilder.homeGraph(
-    onFoodClick: (Int) -> Unit
+    onFoodClick: (Int) -> Unit,
+    onItemClick: (String) -> Unit
 ) {
     composable(route = HomeSections.FEED.route) {
         Feed(
-            onFoodClick = onFoodClick
+            onFoodClick = onFoodClick,
+            onItemClick = onItemClick
         )
     }
     composable(route = HomeSections.SEARCH.route) {
         Search(
-            onFoodClick = onFoodClick
+            onFoodClick = onFoodClick,
+            onItemClick = onItemClick
         )
     }
     composable(route = HomeSections.CART.route) {
         Cart(
-            onFoodClick = onFoodClick
+            onFoodClick = onFoodClick,
+            onItemClick = onItemClick
         )
     }
 }

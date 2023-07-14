@@ -2,12 +2,11 @@ package com.anshtya.fooddelivery.ui.screens.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -16,24 +15,30 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.anshtya.fooddelivery.R
 import com.anshtya.fooddelivery.data.Repository
+import com.anshtya.fooddelivery.ui.components.FoodDeliveryBottomNavBar
 import com.anshtya.fooddelivery.ui.components.FoodItem
 import com.anshtya.fooddelivery.ui.components.LocationBar
 
 @Composable
 fun Feed(
     onFoodClick: (Int) -> Unit,
+    onItemClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val recommendedFoodItems = remember { Repository.getRecommendedList() }
 
-    Surface(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 5.dp)
-    ) {
+    Scaffold(
+        bottomBar = {
+            FoodDeliveryBottomNavBar(
+                currentRoute = HomeSections.FEED.route,
+                onItemClick = onItemClick
+            )
+        }
+    ) { innerPadding ->
         LazyColumn(
             contentPadding = PaddingValues(10.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+            verticalArrangement = Arrangement.spacedBy(20.dp),
+            modifier = modifier.padding(innerPadding)
         ) {
             item {
                 LocationBar()
