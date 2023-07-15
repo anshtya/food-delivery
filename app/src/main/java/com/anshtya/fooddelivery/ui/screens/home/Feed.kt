@@ -22,7 +22,7 @@ import com.anshtya.fooddelivery.ui.components.LocationBar
 @Composable
 fun Feed(
     onFoodClick: (Int) -> Unit,
-    onItemClick: (String) -> Unit,
+    onNavigateToRoute: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val recommendedFoodItems = remember { Repository.getRecommendedList() }
@@ -31,7 +31,7 @@ fun Feed(
         bottomBar = {
             FoodDeliveryBottomNavBar(
                 currentRoute = HomeSections.FEED.route,
-                onItemClick = onItemClick
+                onNavigateToRoute = onNavigateToRoute
             )
         }
     ) { innerPadding ->

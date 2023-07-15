@@ -43,7 +43,7 @@ fun FoodDeliveryApp() {
                         onFoodClick = { id ->
                             navController.navigateToFoodDetail(id)
                         },
-                        onItemClick = {
+                        onNavigateToRoute = {
                             navController.navigateToBottomBarRoute(it)
                         }
                     )

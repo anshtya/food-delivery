@@ -12,13 +12,13 @@ import com.anshtya.fooddelivery.ui.components.FoodDeliveryBottomNavBar
 @Composable
 fun Cart(
     onFoodClick: (Int) -> Unit,
-    onItemClick: (String) -> Unit
+    onNavigateToRoute: (String) -> Unit
 ) {
     Scaffold(
         bottomBar = {
             FoodDeliveryBottomNavBar(
                 currentRoute = HomeSections.CART.route,
-                onItemClick = onItemClick
+                onNavigateToRoute = onNavigateToRoute
             )
         }
     ) {

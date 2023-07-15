@@ -16,7 +16,7 @@ import com.anshtya.fooddelivery.ui.screens.home.HomeSections
 fun FoodDeliveryNavigationItem(
     item: HomeSections,
     currentDestination: String?,
-    onItemClick: () -> Unit
+    onNavigateToRoute: () -> Unit
 ) {
     val itemSelected = currentDestination == item.route
     if (itemSelected) {
@@ -25,7 +25,7 @@ fun FoodDeliveryNavigationItem(
             contentDescription = stringResource(item.title),
             modifier = Modifier
                 .size(30.dp)
-                .noRippleClickable { onItemClick() }
+                .noRippleClickable { onNavigateToRoute() }
         )
     } else {
         Icon(
@@ -33,7 +33,7 @@ fun FoodDeliveryNavigationItem(
             contentDescription = stringResource(item.title),
             modifier = Modifier
                 .size(30.dp)
-                .noRippleClickable { onItemClick() }
+                .noRippleClickable { onNavigateToRoute() }
         )
     }
 }

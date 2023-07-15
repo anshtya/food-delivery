@@ -14,7 +14,7 @@ import com.anshtya.fooddelivery.ui.screens.home.HomeSections
 @Composable
 fun FoodDeliveryBottomNavBar(
     currentRoute: String?,
-    onItemClick: (String) -> Unit,
+    onNavigateToRoute: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -22,14 +22,14 @@ fun FoodDeliveryBottomNavBar(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 5.dp)
+            .padding(vertical = 14.dp)
     ) {
         val items = HomeSections.values()
         items.forEach { item ->
             FoodDeliveryNavigationItem(
                 item = item,
                 currentDestination = currentRoute,
-                onItemClick = { onItemClick(item.route) }
+                onNavigateToRoute = { onNavigateToRoute(item.route) }
             )
         }
     }
@@ -40,7 +40,7 @@ fun FoodDeliveryBottomNavBar(
 fun BottomNavBarPreview() {
     FoodDeliveryBottomNavBar(
         currentRoute = HomeSections.CART.route,
-        onItemClick = {}
+        onNavigateToRoute = {}
     )
 }
 
