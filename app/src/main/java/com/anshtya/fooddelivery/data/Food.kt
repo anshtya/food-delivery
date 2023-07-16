@@ -9,7 +9,7 @@ data class Food(
     val type: String = ""
 )
 
-val filters: List<String> = listOf("Appetizers", "Desserts", "Snacks", "Pricing", "Rating 4.0+")
+val filters: List<String> = listOf("Appetizers", "Desserts", "Snacks", "Rating 4.0+")
 
 val foodList: List<Food> = listOf(
     Food(
@@ -36,14 +36,14 @@ val foodList: List<Food> = listOf(
     ),
     Food(
         id = 4,
-        name = "Hot dog",
+        name = "Hot Dog",
         image = "https://source.unsplash.com/Z2cAwmIKDxA",
         rating = 3.5,
         price = 3.99
     ),
     Food(
         id = 5,
-        name = "Chicken wings",
+        name = "Chicken Wings",
         image = "https://source.unsplash.com/gE28aTnlqJA",
         rating = 4.0,
         price = 7.99
@@ -72,7 +72,7 @@ val foodList: List<Food> = listOf(
     ),
     Food(
         id = 9,
-        name = "Chicken nuggets",
+        name = "Chicken Nuggets",
         image = "https://source.unsplash.com/P_z_xlMGuEk",
         rating = 3.5,
         type = "Appetizers",
@@ -80,7 +80,7 @@ val foodList: List<Food> = listOf(
     ),
     Food(
         id = 10,
-        name = "Onion rings",
+        name = "Onion Rings",
         image = "https://source.unsplash.com/HU_ubYnwElc",
         rating = 3.0,
         type = "Appetizers",
@@ -88,7 +88,7 @@ val foodList: List<Food> = listOf(
     ),
     Food(
         id = 11,
-        name = "Mozzarella sticks",
+        name = "Mozzarella Sticks",
         image = "https://source.unsplash.com/SQ1vUOxSIZc",
         rating = 3.5,
         type = "Appetizers",
@@ -120,7 +120,7 @@ val foodList: List<Food> = listOf(
     ),
     Food(
         id = 15,
-        name = "Ice cream",
+        name = "Ice Cream",
         image = "https://source.unsplash.com/nJoiyJwBhQY",
         rating = 4.0,
         type = "Desserts",
@@ -136,14 +136,14 @@ val foodList: List<Food> = listOf(
     ),
     Food(
         id = 17,
-        name = "Fried chicken",
+        name = "Fried Chicken",
         image = "https://source.unsplash.com/qcLlJvBK3eI",
         rating = 4.2,
         price = 7.99
     ),
     Food(
         id = 18,
-        name = "Sushi rolls",
+        name = "Sushi Rolls",
         image = "https://source.unsplash.com/iy_MT2ifklc",
         rating = 4.0,
         type = "Desserts",
@@ -151,7 +151,7 @@ val foodList: List<Food> = listOf(
     ),
     Food(
         id = 19,
-        name = "Spring rolls",
+        name = "Spring Rolls",
         image = "https://source.unsplash.com/UkudQyyeovs",
         rating = 3.5,
         type = "Snacks",
