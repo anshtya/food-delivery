@@ -9,8 +9,6 @@ data class Food(
     val type: String = ""
 )
 
-val filters: List<String> = listOf("Sort", "Type", "Rating 4.0+")
-
 val foodList: List<Food> = listOf(
     Food(
         id = 1,

@@ -1,29 +1,31 @@
 package com.anshtya.fooddelivery.data
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
 
 
 object Repository {
+
+    private val repositoryScope = CoroutineScope(Dispatchers.Default)
 
     private val mutableFoodList = MutableStateFlow(foodList)
     val foodItems = mutableFoodList.asStateFlow()
     private var oldList: List<Food> = emptyList()
 
-    fun getFoodItems(): List<Food> = foodList
+    private val mutableFilterOptions = MutableStateFlow(filterOptions)
+    val filterList = mutableFilterOptions.asStateFlow()
+
     fun getRecommendedList(): List<Food> = foodList.filter { it.rating >= 4 }.take(7)
-    fun getFilters(): List<String> = filters
     fun getFood(foodId: Int): Food = foodList.find { it.id == foodId }!!
 
-    suspend fun getSearchResults(text: String) {
-        withContext(Dispatchers.Default) {
+    fun getSearchResults(text: String) {
+        repositoryScope.launch {
             if (text.isEmpty()) {
                 mutableFoodList.emit(foodList)
             } else {
-                delay(1000L)
                 mutableFoodList.emit(
                     foodList.filter { it.name.contains(text, ignoreCase = true) }
                 )
@@ -31,8 +33,13 @@ object Repository {
         }
     }
 
-    suspend fun showHighRatingItems(show: Boolean) {
-        withContext(Dispatchers.Default) {
+    fun showHighRatingItems(show: Boolean, id: Int) {
+       repositoryScope.launch {
+            mutableFilterOptions.emit(
+                filterOptions.apply {
+                    find { it.id == id }!!.isSelected = show
+                }
+            )
             if (show) {
                 val newList = foodList.filter { it.rating >= 4 }
                 oldList = mutableFoodList.value

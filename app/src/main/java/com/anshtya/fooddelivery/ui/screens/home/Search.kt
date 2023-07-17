@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,7 +20,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -30,7 +28,7 @@ import com.anshtya.fooddelivery.data.Repository
 import com.anshtya.fooddelivery.ui.components.FoodDeliveryBottomNavBar
 import com.anshtya.fooddelivery.ui.components.FoodDeliverySearchBar
 import com.anshtya.fooddelivery.ui.components.FoodItem
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,10 +39,9 @@ fun Search(
 ) {
     var text by remember { mutableStateOf("") }
     var isSearching by remember { mutableStateOf(false) }
-    val searchFilters = remember { Repository.getFilters() }
-    val selectedSearchFilters = remember { mutableSetOf<Int>() }
-    val coroutineScope = rememberCoroutineScope()
     val foodItems by Repository.foodItems.collectAsStateWithLifecycle()
+    val searchFilters by Repository.filterList.collectAsStateWithLifecycle()
+
     Scaffold(
         bottomBar = {
             FoodDeliveryBottomNavBar(
@@ -68,6 +65,9 @@ fun Search(
 
             LaunchedEffect(text) {
                 isSearching = true
+                if (text.isNotEmpty()) {
+                    delay(1000L)
+                }
                 Repository.getSearchResults(text)
                 isSearching = false
             }
@@ -76,30 +76,31 @@ fun Search(
                 horizontalArrangement = Arrangement.spacedBy(5.dp),
                 contentPadding = PaddingValues(horizontal = 10.dp)
             ) {
-                itemsIndexed(searchFilters) { index, filter ->
+                items(
+                    items = searchFilters,
+                    key = { filter -> filter.id }
+                ) { filter ->
                     FilterChip(
-                        selected = selectedSearchFilters.contains(index),
+                        selected = filter.isSelected,
                         onClick = {
                             when (filter) {
                                 searchFilters[0] -> {}
                                 searchFilters[1] -> {}
 
                                 searchFilters[2] -> {
-                                    if(selectedSearchFilters.contains(index)) {
-                                        selectedSearchFilters.remove(index)
-                                        coroutineScope.launch { Repository.showHighRatingItems(false) }
+                                    if (filter.isSelected) {
+                                        Repository.showHighRatingItems(false, filter.id)
                                     } else {
-                                        selectedSearchFilters.add(index)
-                                        coroutineScope.launch { Repository.showHighRatingItems(true) }
+                                        Repository.showHighRatingItems(true, filter.id)
                                     }
                                 }
                             }
                         },
                         label = {
-                            Text(filter)
+                            Text(filter.name)
                         },
                         trailingIcon = {
-                            if(filter != searchFilters[2]) {
+                            if (filter != searchFilters[2]) {
                                 Icon(
                                     imageVector = Icons.Default.KeyboardArrowDown,
                                     contentDescription = null
@@ -116,6 +117,7 @@ fun Search(
             ) {
                 items(
                     items = foodItems,
+                    key = { food -> food.id }
                 ) { item ->
                     FoodItem(
                         item = item,
