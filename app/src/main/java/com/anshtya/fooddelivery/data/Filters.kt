@@ -3,7 +3,7 @@ package com.anshtya.fooddelivery.data
 data class Filter(
     val id: Int,
     val name: String,
-    var isSelected: Boolean = false
+    val isSelected: Boolean = false
 )
 
 val filterOptions: List<Filter> = listOf(

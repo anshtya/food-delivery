@@ -1,5 +1,6 @@
 package com.anshtya.fooddelivery.ui.screens.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,6 +21,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -29,6 +31,7 @@ import com.anshtya.fooddelivery.ui.components.FoodDeliveryBottomNavBar
 import com.anshtya.fooddelivery.ui.components.FoodDeliverySearchBar
 import com.anshtya.fooddelivery.ui.components.FoodItem
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,6 +42,7 @@ fun Search(
 ) {
     var text by remember { mutableStateOf("") }
     var isSearching by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
     val foodItems by Repository.foodItems.collectAsStateWithLifecycle()
     val searchFilters by Repository.filterList.collectAsStateWithLifecycle()
 
@@ -80,6 +84,7 @@ fun Search(
                     items = searchFilters,
                     key = { filter -> filter.id }
                 ) { filter ->
+                    Log.d("lulu", "$searchFilters")
                     FilterChip(
                         selected = filter.isSelected,
                         onClick = {
@@ -88,10 +93,12 @@ fun Search(
                                 searchFilters[1] -> {}
 
                                 searchFilters[2] -> {
-                                    if (filter.isSelected) {
-                                        Repository.showHighRatingItems(false, filter.id)
-                                    } else {
-                                        Repository.showHighRatingItems(true, filter.id)
+                                    coroutineScope.launch {
+                                        if (filter.isSelected) {
+                                            Repository.showHighRatingItems(false, filter.id)
+                                        } else {
+                                            Repository.showHighRatingItems(true, filter.id)
+                                        }
                                     }
                                 }
                             }
