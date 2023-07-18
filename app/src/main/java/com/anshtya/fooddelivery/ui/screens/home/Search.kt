@@ -1,6 +1,5 @@
 package com.anshtya.fooddelivery.ui.screens.home
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,11 +8,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +23,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.anshtya.fooddelivery.data.Repository
+import com.anshtya.fooddelivery.data.sortFilterList
+import com.anshtya.fooddelivery.data.typeFilterList
+import com.anshtya.fooddelivery.ui.components.FilterChipWithBottomSheet
 import com.anshtya.fooddelivery.ui.components.FoodDeliveryBottomNavBar
 import com.anshtya.fooddelivery.ui.components.FoodDeliverySearchBar
 import com.anshtya.fooddelivery.ui.components.FoodItem
@@ -80,39 +79,45 @@ fun Search(
                 horizontalArrangement = Arrangement.spacedBy(5.dp),
                 contentPadding = PaddingValues(horizontal = 10.dp)
             ) {
-                items(
-                    items = searchFilters,
-                    key = { filter -> filter.id }
-                ) { filter ->
-                    Log.d("lulu", "$searchFilters")
-                    FilterChip(
-                        selected = filter.isSelected,
-                        onClick = {
-                            when (filter) {
-                                searchFilters[0] -> {}
-                                searchFilters[1] -> {}
+                item(
+                    key = 0
+                ) {
+                    val sortFilter = searchFilters[0]
+                    FilterChipWithBottomSheet(
+                        filterName = sortFilter.name,
+                        optionList = sortFilterList,
+                        selectMultipleOptions = false
+                    )
+                }
 
-                                searchFilters[2] -> {
-                                    coroutineScope.launch {
-                                        if (filter.isSelected) {
-                                            Repository.showHighRatingItems(false, filter.id)
-                                        } else {
-                                            Repository.showHighRatingItems(true, filter.id)
-                                        }
-                                    }
+                item(
+                    key = 1
+                ) {
+                    val typeFilter = searchFilters[1]
+                    FilterChipWithBottomSheet(
+                        filterName = typeFilter.name,
+                        optionList = typeFilterList,
+                        selectMultipleOptions = true
+                    )
+                }
+
+                item(
+                    key = 2
+                ) {
+                    val ratingFilter = searchFilters[2]
+                    FilterChip(
+                        selected = ratingFilter.isSelected,
+                        onClick = {
+                            coroutineScope.launch {
+                                if (ratingFilter.isSelected) {
+                                    Repository.showHighRatingItems(false, ratingFilter.id)
+                                } else {
+                                    Repository.showHighRatingItems(true, ratingFilter.id)
                                 }
                             }
                         },
                         label = {
-                            Text(filter.name)
-                        },
-                        trailingIcon = {
-                            if (filter != searchFilters[2]) {
-                                Icon(
-                                    imageVector = Icons.Default.KeyboardArrowDown,
-                                    contentDescription = null
-                                )
-                            }
+                            Text(ratingFilter.name)
                         }
                     )
                 }
