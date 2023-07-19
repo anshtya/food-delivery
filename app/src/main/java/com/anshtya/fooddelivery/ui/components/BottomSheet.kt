@@ -1,6 +1,5 @@
 package com.anshtya.fooddelivery.ui.components
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -18,10 +17,6 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -30,15 +25,17 @@ import com.anshtya.fooddelivery.data.Filter
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FoodDeliveryBottomSheet(
+    optionSelected: Set<Int>,
     optionsList: List<Filter>,
     selectMultipleOptions: Boolean,
     onSheetClose: () -> Unit,
+    onRemoveOption: (Int) -> Unit,
+    onAddOption: (Int) -> Unit,
+    onAddSingleOptionOnly: (Int) -> Unit,
+    onClearAllOptions: () -> Unit,
     onOptionApply: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var optionSelected by remember { mutableStateOf(setOf<Int>()) }
-
-    Log.d("lulu", "$optionSelected")
 
     ModalBottomSheet(
         onDismissRequest = onSheetClose,
@@ -59,10 +56,10 @@ fun FoodDeliveryBottomSheet(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                optionSelected = if (optionSelected.contains(filter.id)) {
-                                    optionSelected.minus(filter.id)
+                                if (optionSelected.contains(filter.id)) {
+                                    onRemoveOption(filter.id)
                                 } else {
-                                    optionSelected.plus(filter.id)
+                                    onAddOption(filter.id)
                                 }
                             }
                     ) {
@@ -70,10 +67,10 @@ fun FoodDeliveryBottomSheet(
                         Checkbox(
                             checked = optionSelected.contains(filter.id),
                             onCheckedChange = {
-                                optionSelected = if (optionSelected.contains(filter.id)) {
-                                    optionSelected.minus(filter.id)
+                                if (optionSelected.contains(filter.id)) {
+                                    onRemoveOption(filter.id)
                                 } else {
-                                    optionSelected.plus(filter.id)
+                                    onAddOption(filter.id)
                                 }
                             }
                         )
@@ -89,10 +86,10 @@ fun FoodDeliveryBottomSheet(
                         modifier = Modifier
                             .fillMaxWidth()
                             .noRippleClickable {
-                                optionSelected = if (optionSelected.contains(filter.id)) {
-                                    setOf()
+                                if (optionSelected.contains(filter.id)) {
+                                    onClearAllOptions()
                                 } else {
-                                    setOf(filter.id)
+                                    onAddSingleOptionOnly(filter.id)
                                 }
                             }
                     ) {
@@ -100,10 +97,10 @@ fun FoodDeliveryBottomSheet(
                         RadioButton(
                             selected = optionSelected.contains(filter.id),
                             onClick = {
-                                optionSelected = if (optionSelected.contains(filter.id)) {
-                                    setOf()
+                                if (optionSelected.contains(filter.id)) {
+                                    onClearAllOptions()
                                 } else {
-                                    setOf(filter.id)
+                                    onAddSingleOptionOnly(filter.id)
                                 }
                             }
                         )
@@ -116,7 +113,7 @@ fun FoodDeliveryBottomSheet(
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     Button(
-                        onClick = { optionSelected = setOf() },
+                        onClick = onClearAllOptions,
                         shape = RoundedCornerShape(5.dp),
                         modifier = Modifier
                             .fillMaxWidth(0.4F)
@@ -126,7 +123,7 @@ fun FoodDeliveryBottomSheet(
                     }
                     Button(
                         enabled = optionSelected.isNotEmpty(),
-                        onClick = { },
+                        onClick = onOptionApply,
                         shape = RoundedCornerShape(5.dp),
                         modifier = Modifier
                             .fillMaxWidth()

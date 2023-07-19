@@ -17,13 +17,16 @@ import com.anshtya.fooddelivery.data.Filter
 @Composable
 fun FilterChipWithBottomSheet(
     filterName: String,
+    selected: Boolean,
     optionList: List<Filter>,
-    selectMultipleOptions: Boolean
+    selectMultipleOptions: Boolean,
+    onOptionApply: (Set<Int>) -> Unit
 ) {
     var isBottomSheetOpen by remember { mutableStateOf(false) }
+    var optionSelected by remember { mutableStateOf(setOf<Int>()) }
 
     FilterChip(
-        selected = false,
+        selected = selected,
         onClick = { isBottomSheetOpen = true },
         label = {
             Text(filterName)
@@ -38,10 +41,28 @@ fun FilterChipWithBottomSheet(
 
     if (isBottomSheetOpen) {
         FoodDeliveryBottomSheet(
+            optionSelected = optionSelected,
             optionsList = optionList,
             selectMultipleOptions = selectMultipleOptions,
             onSheetClose = { isBottomSheetOpen = false },
-            onOptionApply = { /*TODO*/ }
+            onRemoveOption = { id ->
+                optionSelected = optionSelected.minus(id)
+            },
+            onAddOption = { id ->
+                optionSelected = optionSelected.plus(id)
+            },
+            onAddSingleOptionOnly = { id ->
+                optionSelected = setOf(id)
+            },
+            onClearAllOptions = {
+                optionSelected = setOf()
+                onOptionApply(optionSelected)
+                isBottomSheetOpen = false
+            },
+            onOptionApply = {
+                onOptionApply(optionSelected)
+                isBottomSheetOpen = false
+            }
         )
     }
 }

@@ -85,8 +85,14 @@ fun Search(
                     val sortFilter = searchFilters[0]
                     FilterChipWithBottomSheet(
                         filterName = sortFilter.name,
+                        selected = sortFilter.isSelected,
                         optionList = sortFilterList,
-                        selectMultipleOptions = false
+                        selectMultipleOptions = false,
+                        onOptionApply = {
+                            coroutineScope.launch {
+                                Repository.sortItems(it, sortFilter.id)
+                            }
+                        }
                     )
                 }
 
@@ -96,8 +102,14 @@ fun Search(
                     val typeFilter = searchFilters[1]
                     FilterChipWithBottomSheet(
                         filterName = typeFilter.name,
+                        selected = typeFilter.isSelected,
                         optionList = typeFilterList,
-                        selectMultipleOptions = true
+                        selectMultipleOptions = true,
+                        onOptionApply = {
+                            coroutineScope.launch {
+                                Repository.filterType(it, typeFilter.id)
+                            }
+                        }
                     )
                 }
 
@@ -128,8 +140,7 @@ fun Search(
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
                 items(
-                    items = foodItems,
-                    key = { food -> food.id }
+                    items = foodItems
                 ) { item ->
                     FoodItem(
                         item = item,
