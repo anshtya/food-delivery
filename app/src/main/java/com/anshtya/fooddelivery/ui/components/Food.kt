@@ -1,6 +1,5 @@
 package com.anshtya.fooddelivery.ui.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -43,7 +43,7 @@ fun FoodItem(
         shadowElevation = 5.dp,
         modifier = modifier
             .height(180.dp)
-            .clickable { onFoodClick(item.id) }
+            .noRippleClickable { onFoodClick(item.id) }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -52,30 +52,10 @@ fun FoodItem(
                 .fillMaxWidth()
                 .padding(10.dp)
         ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(2.dp),
+            FoodDescription(
+                item = item,
                 modifier = Modifier.fillMaxWidth(0.5F)
-            ) {
-                Text(
-                    text = item.name,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 20.sp
-                )
-                FoodRatingSurface(
-                    rating = item.rating
-                )
-                Text(
-                    text = "$${item.price}",
-                    style = MaterialTheme.typography.titleSmall
-                )
-                if (item.type.isNotEmpty()) {
-                    Text(
-                        text = item.type,
-                        color = Color.Gray,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-            }
+            )
 
             FoodImage(
                 imageUrl = item.image,
@@ -87,14 +67,46 @@ fun FoodItem(
 }
 
 @Composable
+fun FoodDescription(
+    item: Food,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(2.dp),
+        modifier = modifier
+    ) {
+        Text(
+            text = item.name,
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp
+        )
+        FoodRatingSurface(
+            rating = item.rating
+        )
+        Text(
+            text = "$${item.price}",
+            style = MaterialTheme.typography.titleSmall
+        )
+        if (item.type.isNotEmpty()) {
+            Text(
+                text = item.type,
+                color = Color.Gray,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+    }
+}
+
+@Composable
 fun FoodImage(
     imageUrl: String,
     contentDescription: String?,
-    modifier: Modifier
+    modifier: Modifier = Modifier,
+    shape: Shape = RoundedCornerShape(5.dp),
 ) {
     Surface(
         color = Color.LightGray,
-        shape = RoundedCornerShape(5.dp),
+        shape = shape,
         modifier = modifier
     ) {
         AsyncImage(
