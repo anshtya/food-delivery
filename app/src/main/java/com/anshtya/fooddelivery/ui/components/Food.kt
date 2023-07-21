@@ -23,10 +23,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.anshtya.fooddelivery.data.Food
+import com.anshtya.fooddelivery.data.foodList
 import com.anshtya.fooddelivery.ui.theme.ratingGreenColor
 
 @Composable
@@ -39,22 +42,45 @@ fun FoodItem(
         shape = RoundedCornerShape(10.dp),
         shadowElevation = 5.dp,
         modifier = modifier
+            .height(180.dp)
             .clickable { onFoodClick(item.id) }
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth()
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp)
         ) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(2.dp),
+                modifier = Modifier.fillMaxWidth(0.5F)
+            ) {
+                Text(
+                    text = item.name,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp
+                )
+                FoodRatingSurface(
+                    rating = item.rating
+                )
+                Text(
+                    text = "$${item.price}",
+                    style = MaterialTheme.typography.titleSmall
+                )
+                if (item.type.isNotEmpty()) {
+                    Text(
+                        text = item.type,
+                        color = Color.Gray,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+
             FoodImage(
                 imageUrl = item.image,
                 contentDescription = item.name,
-                modifier = Modifier.height(200.dp)
-            )
-            FoodDescription(
-                name = item.name,
-                price = item.price,
-                rating = item.rating,
-                type = item.type,
-                modifier = Modifier.padding(10.dp)
+                modifier = Modifier.size(120.dp)
             )
         }
     }
@@ -68,6 +94,7 @@ fun FoodImage(
 ) {
     Surface(
         color = Color.LightGray,
+        shape = RoundedCornerShape(5.dp),
         modifier = modifier
     ) {
         AsyncImage(
@@ -76,48 +103,9 @@ fun FoodImage(
                 .crossfade(true)
                 .build(),
             contentDescription = contentDescription,
-            contentScale = ContentScale.FillBounds,
+            contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
-    }
-}
-
-@Composable
-fun FoodDescription(
-    name: String,
-    price: Double,
-    rating: Double,
-    type: String,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(2.dp),
-        modifier = modifier.fillMaxWidth()
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(
-                text = name,
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleLarge
-            )
-            FoodRatingSurface(
-                rating = rating
-            )
-        }
-        Text(
-            text = "$$price",
-            style = MaterialTheme.typography.titleSmall
-        )
-        if (type.isNotEmpty()) {
-            Text(
-                text = type,
-                color = Color.Gray,
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
     }
 }
 
@@ -146,4 +134,13 @@ fun FoodRatingSurface(
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FoodPreview() {
+    FoodItem(
+        item = foodList[8],
+        onFoodClick = {}
+    )
 }
