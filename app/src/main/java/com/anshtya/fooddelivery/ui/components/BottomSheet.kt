@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
@@ -15,7 +17,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.anshtya.fooddelivery.R
 import com.anshtya.fooddelivery.data.FilterOption
 import com.anshtya.fooddelivery.data.SortOption
 
@@ -23,52 +27,49 @@ import com.anshtya.fooddelivery.data.SortOption
 fun SortOptionBottomSheet(
     sortOptions: List<SortOption>,
     selectedSortOption: SortOption,
-    onSortOptionClick: (SortOption) -> Unit
+    onApplySortOption: (SortOption) -> Unit,
+    onClearSortOption: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 10.dp)
+        verticalArrangement = Arrangement.SpaceBetween,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(10.dp)
     ) {
-        sortOptions.forEach { sortOption ->
-            if (sortOption != SortOption.Default) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onSortOptionClick(sortOption) }
-                ) {
-                    Text(text = sortOption.name)
-                    Checkbox(
-                        checked = selectedSortOption == sortOption,
-                        onCheckedChange = { onSortOptionClick(sortOption) }
-                    )
+        LazyColumn {
+            items(sortOptions) { sortOption ->
+                if(sortOption != SortOption.Default) {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onApplySortOption(sortOption) }
+                    ) {
+                        Text(text = sortOption.optionName)
+                        Checkbox(
+                            checked = selectedSortOption == sortOption,
+                            onCheckedChange = { onApplySortOption(sortOption) }
+                        )
+                    }
                 }
             }
         }
         Row(
-            modifier = Modifier.fillMaxSize(),
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
+            modifier = Modifier.fillMaxWidth()
         ) {
             Button(
-                onClick = {},
-                shape = RoundedCornerShape(5.dp),
-                modifier = Modifier
-                    .fillMaxWidth(0.4F)
-                    .height(50.dp)
-            ) {
-                Text("Clear All")
-            }
-            Button(
-                enabled = false,
-                onClick = {  },
+                onClick = onClearSortOption,
+                enabled = selectedSortOption != SortOption.Default,
                 shape = RoundedCornerShape(5.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
             ) {
-                Text("Apply")
+                Text(
+                    stringResource(R.string.clear_all)
+                )
             }
         }
     }
@@ -78,50 +79,47 @@ fun SortOptionBottomSheet(
 fun FilterOptionsBottomSheet(
     filterOptions: List<FilterOption>,
     selectedFilterOptions: List<FilterOption>,
-    onFilterOptionClick: (FilterOption) -> Unit
+    onFilterOptionClick: (FilterOption) -> Unit,
+    onClearFilterOption: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
+        verticalArrangement = Arrangement.SpaceBetween,
+        modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 10.dp)
+            .padding(10.dp)
     ) {
-        filterOptions.forEach { filter ->
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onFilterOptionClick(filter) }
-            ) {
-                Text(text = filter.name)
-                Checkbox(
-                    checked = selectedFilterOptions.contains(filter),
-                    onCheckedChange = { onFilterOptionClick(filter) }
-                )
+        LazyColumn {
+            items(filterOptions) { filter ->
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onFilterOptionClick(filter) }
+                ) {
+                    Text(text = filter.name)
+                    Checkbox(
+                        checked = selectedFilterOptions.contains(filter),
+                        onCheckedChange = { onFilterOptionClick(filter) }
+                    )
+                }
             }
         }
         Row(
-            modifier = Modifier.fillMaxSize(),
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
+            modifier = Modifier.fillMaxWidth(),
         ) {
             Button(
-                onClick = {},
-                shape = RoundedCornerShape(5.dp),
-                modifier = Modifier
-                    .fillMaxWidth(0.4F)
-                    .height(50.dp)
-            ) {
-                Text("Clear All")
-            }
-            Button(
-                enabled = false,
-                onClick = { },
+                enabled = selectedFilterOptions.isNotEmpty(),
+                onClick = onClearFilterOption,
                 shape = RoundedCornerShape(5.dp),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
             ) {
-                Text("Apply")
+                Text(
+                    stringResource(R.string.clear_all)
+                )
             }
         }
     }

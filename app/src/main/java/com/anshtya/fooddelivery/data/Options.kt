@@ -1,16 +1,16 @@
 package com.anshtya.fooddelivery.data
 
-enum class SortOption {
-    Default,
-    ByPriceAscending,
-    ByPriceDescending,
-    ByRatingDescending
+enum class SortOption(
+    val optionName: String
+) {
+    Default(""),
+    ByPriceAscending("Price: Low to High"),
+    ByPriceDescending("Price: High to Low"),
+    ByRatingDescending("Rating: High to Low")
 }
 
-enum class FilterOption(
-    name: String
-) {
-    Appetizers("Appetizers"),
-    Snacks("Snacks"),
-    Desserts("Desserts")
+enum class FilterOption {
+    Appetizers,
+    Snacks,
+    Desserts
 }

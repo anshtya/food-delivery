@@ -30,7 +30,7 @@ class HomeViewModel : ViewModel() {
             filteredList
         } else {
             filteredList.sortedBy { food ->
-                applySort(sortOption, food)
+                sortList(sortOption, food)
             }
         }
     }.stateIn(
@@ -47,11 +47,11 @@ class HomeViewModel : ViewModel() {
 
     fun getFilterOptions() = repository.getFilterOptions()
 
-    fun setSortOption(sortOption: SortOption) {
+    fun applySortOption(sortOption: SortOption) {
         _sortOption.value = sortOption
     }
 
-    private fun applySort(sortOption: SortOption, food: Food): Double {
+    private fun sortList(sortOption: SortOption, food: Food): Double {
         return when (sortOption) {
             SortOption.ByPriceAscending -> food.price
             SortOption.ByPriceDescending -> -food.price
