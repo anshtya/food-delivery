@@ -13,16 +13,18 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.anshtya.fooddelivery.R
-import com.anshtya.fooddelivery.data.Repository
 import com.anshtya.fooddelivery.ui.components.FoodDescription
 import com.anshtya.fooddelivery.ui.components.FoodImage
+import com.anshtya.fooddelivery.ui.screens.HomeViewModel
 
 @Composable
 fun FoodDetail(
-    foodId: String
+    foodId: String,
+    homeViewModel: HomeViewModel = viewModel()
 ) {
-    val foodItem = remember { Repository.getFood(foodId.toInt()) }
+    val foodItem = remember { homeViewModel.getFoodDetail(foodId.toInt()) }
     
     Column(
         modifier = Modifier.fillMaxSize()

@@ -13,19 +13,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.anshtya.fooddelivery.R
-import com.anshtya.fooddelivery.data.Repository
 import com.anshtya.fooddelivery.ui.components.FoodDeliveryBottomNavBar
 import com.anshtya.fooddelivery.ui.components.FoodItem
 import com.anshtya.fooddelivery.ui.components.LocationBar
+import com.anshtya.fooddelivery.ui.screens.HomeViewModel
 
 @Composable
 fun Feed(
     onFoodClick: (Int) -> Unit,
     onNavigateToRoute: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    homeViewModel: HomeViewModel = viewModel()
 ) {
-    val recommendedFoodItems = remember { Repository.getRecommendedList() }
+    val recommendedFoodItems = remember { homeViewModel.getRecommendedFoodList() }
 
     Scaffold(
         bottomBar = {
