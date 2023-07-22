@@ -8,5 +8,8 @@ object Repository {
     fun getFoodDetail(foodId: Int): Food = foodList.find { it.id == foodId }!!
     fun getSortOptions() = SortOption.values().toList()
     fun getFilterOptions() = FilterOption.values().toList()
+    fun getSearchResult(list: List<Food>, query: String) = list.filter {
+        it.name.contains(query, ignoreCase = true)
+    }
 
 }

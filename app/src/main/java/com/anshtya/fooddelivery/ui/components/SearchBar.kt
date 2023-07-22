@@ -2,13 +2,10 @@ package com.anshtya.fooddelivery.ui.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -25,12 +22,10 @@ import com.anshtya.fooddelivery.R
 @Composable
 fun FoodDeliverySearchBar(
     text: String,
-    isSearching: Boolean,
     onValueChange: (String) -> Unit,
     onClearText: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-
     Surface(
         shape = RoundedCornerShape(10.dp),
         shadowElevation = 5.dp,
@@ -56,7 +51,7 @@ fun FoodDeliverySearchBar(
                     )
                 },
                 trailingIcon = {
-                    if (text.isNotEmpty() && !isSearching) {
+                    if (text.isNotEmpty()) {
                         Icon(
                             imageVector = Icons.Rounded.Clear,
                             contentDescription = null,
@@ -68,15 +63,6 @@ fun FoodDeliverySearchBar(
                 placeholder = { Text(stringResource(R.string.search_food)) },
                 modifier = Modifier.weight(1F)
             )
-            if (isSearching) {
-                CircularProgressIndicator(
-                    color = Color.Gray,
-                    strokeWidth = 2.dp,
-                    modifier = Modifier
-                        .padding(horizontal = 10.dp)
-                        .size(15.dp)
-                )
-            }
         }
     }
 }

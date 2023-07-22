@@ -24,9 +24,12 @@ class HomeViewModel : ViewModel() {
     private val _filterOptions = MutableStateFlow<List<FilterOption>>(emptyList())
     val filterOptions = _filterOptions.asStateFlow()
 
-    val filteredAndSortedList = combine(_sortOption, _filterOptions) { sortOption, filters ->
-        val filteredList = filterList(filters)
-        if (sortOption == SortOption.Default ) {
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery = _searchQuery.asStateFlow()
+
+    val filteredAndSortedList = combine(_sortOption, _filterOptions) { sortOption, filterOptions ->
+        val filteredList = filterList(filterOptions)
+        if (sortOption == SortOption.Default) {
             filteredList
         } else {
             filteredList.sortedBy { food ->
@@ -39,9 +42,29 @@ class HomeViewModel : ViewModel() {
         initialValue = _foodList
     )
 
+    val searchResults = combine(filteredAndSortedList, _searchQuery) { currentList, query ->
+        getSearchResult(currentList, query).ifEmpty { emptyList() }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000L),
+        initialValue = emptyList()
+    )
+
     fun getFoodDetail(foodId: Int) = repository.getFoodDetail(foodId)
 
     fun getRecommendedFoodList() = repository.getRecommendedList()
+
+    private fun getSearchResult(list: List<Food>, query: String): List<Food> {
+        return if (query.isNotEmpty()) {
+            repository.getSearchResult(list, query)
+        } else {
+            emptyList()
+        }
+    }
+
+    fun updateSearchQuery(searchQuery: String) {
+        _searchQuery.value = searchQuery
+    }
 
     fun getSortOptions() = repository.getSortOptions()
 
@@ -79,6 +102,10 @@ class HomeViewModel : ViewModel() {
 
     fun clearFilterOptions() {
         _filterOptions.value = emptyList()
+    }
+
+    fun clearSearchQuery() {
+        _searchQuery.value = ""
     }
 
     private fun filterList(filterOptions: List<FilterOption>): List<Food> {

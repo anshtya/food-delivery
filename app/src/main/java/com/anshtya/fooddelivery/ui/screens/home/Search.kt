@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,7 +20,6 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,7 +37,6 @@ import com.anshtya.fooddelivery.ui.components.FoodDeliverySearchBar
 import com.anshtya.fooddelivery.ui.components.FoodItem
 import com.anshtya.fooddelivery.ui.components.SortOptionBottomSheet
 import com.anshtya.fooddelivery.ui.screens.HomeViewModel
-import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,16 +46,16 @@ fun Search(
     modifier: Modifier = Modifier,
     homeViewModel: HomeViewModel = viewModel()
 ) {
-    var text by remember { mutableStateOf("") }
-    var isSearching by remember { mutableStateOf(false) }
     var selectedSheetContent by remember { mutableStateOf(Option.SORT) }
     val sortOptions = remember { homeViewModel.getSortOptions() }
     val filterOptions = remember { homeViewModel.getFilterOptions() }
+    var isBottomSheetOpen by remember { mutableStateOf(false) }
 
     val foodItems by homeViewModel.filteredAndSortedList.collectAsStateWithLifecycle()
+    val searchResults by homeViewModel.searchResults.collectAsStateWithLifecycle()
     val selectedSortOption by homeViewModel.sortOption.collectAsStateWithLifecycle()
     val selectedFilterOptions by homeViewModel.filterOptions.collectAsStateWithLifecycle()
-    var isBottomSheetOpen by remember { mutableStateOf(false) }
+    val searchQuery by homeViewModel.searchQuery.collectAsStateWithLifecycle()
 
     BackHandler(isBottomSheetOpen) {
         isBottomSheetOpen = false
@@ -76,21 +75,11 @@ fun Search(
                 .padding(paddingValues)
         ) {
             FoodDeliverySearchBar(
-                text = text,
-                isSearching = isSearching,
-                onValueChange = { text = it },
-                onClearText = { text = "" },
+                text = searchQuery,
+                onValueChange = { homeViewModel.updateSearchQuery(it) },
+                onClearText = { homeViewModel.clearSearchQuery() },
                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)
             )
-
-            LaunchedEffect(text) {
-                isSearching = true
-                if (text.isNotEmpty()) {
-                    delay(1000L)
-                }
-//                Repository.getSearchResults(text)
-                isSearching = false
-            }
 
             Row(
                 horizontalArrangement = Arrangement.spacedBy(5.dp),
@@ -139,13 +128,37 @@ fun Search(
                 contentPadding = PaddingValues(10.dp),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                items(
-                    items = foodItems
-                ) { item ->
-                    FoodItem(
-                        item = item,
-                        onFoodClick = onFoodClick
-                    )
+                if (searchQuery.isNotEmpty()) {
+                    if (searchResults.isEmpty()) {
+                        item {
+                            Row(
+                                horizontalArrangement = Arrangement.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(
+                                    stringResource(R.string.no_results)
+                                )
+                            }
+                        }
+                    } else {
+                        items(
+                            items = searchResults
+                        ) { item ->
+                            FoodItem(
+                                item = item,
+                                onFoodClick = onFoodClick
+                            )
+                        }
+                    }
+                } else {
+                    items(
+                        items = foodItems
+                    ) { item ->
+                        FoodItem(
+                            item = item,
+                            onFoodClick = onFoodClick
+                        )
+                    }
                 }
             }
         }
