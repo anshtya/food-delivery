@@ -3,18 +3,20 @@ package com.anshtya.fooddelivery.ui.screens
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anshtya.fooddelivery.data.FilterOption
-import com.anshtya.fooddelivery.data.Food
 import com.anshtya.fooddelivery.data.Repository
 import com.anshtya.fooddelivery.data.SortOption
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 
 class HomeViewModel : ViewModel() {
 
     private val repository = Repository
+    private val defaultDispatcher = Dispatchers.Default
 
     private val _foodList = repository.list
 
@@ -28,23 +30,37 @@ class HomeViewModel : ViewModel() {
     val searchQuery = _searchQuery.asStateFlow()
 
     val filteredAndSortedList = combine(_sortOption, _filterOptions) { sortOption, filterOptions ->
-        val filteredList = filterList(filterOptions)
-        if (sortOption == SortOption.Default) {
-            filteredList
-        } else {
-            filteredList.sortedBy { food ->
-                sortList(sortOption, food)
-            }
+        val filteredList = _foodList.run {
+            filterOptions.takeIf { it.isNotEmpty() }?.let { filterOptions ->
+                this.filter { food ->
+                    filterOptions.any { filter ->
+                        food.type == filter.name
+                    }
+                }
+            } ?: this
         }
-    }.stateIn(
+
+        sortOption.takeIf { it != SortOption.Default }?.let {
+            when (sortOption) {
+                SortOption.ByPriceAscending -> filteredList.sortedBy { it.price }
+                SortOption.ByPriceDescending -> filteredList.sortedByDescending { it.price }
+                SortOption.ByRatingDescending -> filteredList.sortedByDescending { it.rating }
+
+                else -> filteredList//unreachable code
+            }
+        } ?: filteredList
+
+    }.flowOn(defaultDispatcher).stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000L),
         initialValue = _foodList
     )
 
     val searchResults = combine(filteredAndSortedList, _searchQuery) { currentList, query ->
-        getSearchResult(currentList, query).ifEmpty { emptyList() }
-    }.stateIn(
+        query.takeIf { it.isNotEmpty() }?.let {
+            repository.getSearchResult(currentList, it)
+        } ?: emptyList()
+    }.flowOn(defaultDispatcher).stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000L),
         initialValue = emptyList()
@@ -53,14 +69,6 @@ class HomeViewModel : ViewModel() {
     fun getFoodDetail(foodId: Int) = repository.getFoodDetail(foodId)
 
     fun getRecommendedFoodList() = repository.getRecommendedList()
-
-    private fun getSearchResult(list: List<Food>, query: String): List<Food> {
-        return if (query.isNotEmpty()) {
-            repository.getSearchResult(list, query)
-        } else {
-            emptyList()
-        }
-    }
 
     fun updateSearchQuery(searchQuery: String) {
         _searchQuery.value = searchQuery
@@ -72,16 +80,6 @@ class HomeViewModel : ViewModel() {
 
     fun applySortOption(sortOption: SortOption) {
         _sortOption.value = sortOption
-    }
-
-    private fun sortList(sortOption: SortOption, food: Food): Double {
-        return when (sortOption) {
-            SortOption.ByPriceAscending -> food.price
-            SortOption.ByPriceDescending -> -food.price
-            SortOption.ByRatingDescending -> -food.rating
-
-            else -> food.price //unreachable
-        }
     }
 
     fun setFilterOption(filterOption: FilterOption) {
@@ -106,17 +104,5 @@ class HomeViewModel : ViewModel() {
 
     fun clearSearchQuery() {
         _searchQuery.value = ""
-    }
-
-    private fun filterList(filterOptions: List<FilterOption>): List<Food> {
-        return if (filterOptions.isEmpty()) {
-            _foodList
-        } else {
-            _foodList.filter { food ->
-                filterOptions.any { filter ->
-                    food.type == filter.name
-                }
-            }
-        }
     }
 }
