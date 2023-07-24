@@ -66,7 +66,11 @@ class HomeViewModel : ViewModel() {
         initialValue = emptyList()
     )
 
-    fun getFoodDetail(foodId: Int) = repository.getFoodDetail(foodId)
+    val cartItems = repository.cartItems.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000L),
+        initialValue = emptyList()
+    )
 
     fun getRecommendedFoodList() = repository.getRecommendedList()
 

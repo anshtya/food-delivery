@@ -42,7 +42,7 @@ fun NavGraphBuilder.homeGraph(
     }
     composable(route = HomeSections.CART.route) {
         Cart(
-            onFoodClick = onFoodClick,
+//            onFoodClick = onFoodClick,
             onNavigateToRoute = onNavigateToRoute
         )
     }
