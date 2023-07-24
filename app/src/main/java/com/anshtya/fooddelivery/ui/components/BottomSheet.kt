@@ -59,13 +59,9 @@ fun SortOptionBottomSheet(
         Row(
             modifier = Modifier.fillMaxWidth()
         ) {
-            Button(
+            BottomButton(
                 onClick = onClearSortOption,
-                enabled = selectedSortOption != SortOption.Default,
-                shape = RoundedCornerShape(5.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp)
+                enabled = selectedSortOption != SortOption.Default
             ) {
                 Text(
                     stringResource(R.string.clear_all)
