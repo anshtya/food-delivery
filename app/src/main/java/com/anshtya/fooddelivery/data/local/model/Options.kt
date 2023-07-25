@@ -1,4 +1,4 @@
-package com.anshtya.fooddelivery.data
+package com.anshtya.fooddelivery.data.local.model
 
 enum class SortOption(
     val optionName: String

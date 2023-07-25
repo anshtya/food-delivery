@@ -27,10 +27,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.anshtya.fooddelivery.R
-import com.anshtya.fooddelivery.data.SortOption
+import com.anshtya.fooddelivery.data.local.model.SortOption
 import com.anshtya.fooddelivery.ui.components.FilterOptionsBottomSheet
 import com.anshtya.fooddelivery.ui.components.FoodDeliveryBottomNavBar
 import com.anshtya.fooddelivery.ui.components.FoodDeliverySearchBar
@@ -44,7 +44,7 @@ fun Search(
     onFoodClick: (Int) -> Unit,
     onNavigateToRoute: (String) -> Unit,
     modifier: Modifier = Modifier,
-    homeViewModel: HomeViewModel = viewModel()
+    homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     var selectedSheetContent by remember { mutableStateOf(Option.SORT) }
     val sortOptions = remember { homeViewModel.getSortOptions() }

@@ -20,8 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.anshtya.fooddelivery.R
-import com.anshtya.fooddelivery.data.FilterOption
-import com.anshtya.fooddelivery.data.SortOption
+import com.anshtya.fooddelivery.data.local.model.FilterOption
+import com.anshtya.fooddelivery.data.local.model.SortOption
 
 @Composable
 fun SortOptionBottomSheet(

@@ -28,8 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.anshtya.fooddelivery.data.Food
-import com.anshtya.fooddelivery.data.foodList
+import com.anshtya.fooddelivery.data.local.model.Food
+import com.anshtya.fooddelivery.data.local.model.foodList
 import com.anshtya.fooddelivery.ui.theme.ratingGreenColor
 
 @Composable

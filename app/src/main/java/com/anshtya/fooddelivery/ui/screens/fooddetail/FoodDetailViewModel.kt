@@ -1,13 +1,25 @@
 package com.anshtya.fooddelivery.ui.screens.fooddetail
 
 import androidx.lifecycle.ViewModel
-import com.anshtya.fooddelivery.data.Repository
+import androidx.lifecycle.viewModelScope
+import com.anshtya.fooddelivery.data.repository.CartRepository
+import com.anshtya.fooddelivery.data.local.model.Food
+import com.anshtya.fooddelivery.data.repository.FoodRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FoodDetailViewModel : ViewModel() {
-    private val repository = Repository
+@HiltViewModel
+class FoodDetailViewModel @Inject constructor(
+    private val foodRepository: FoodRepository,
+    private val cartRepository: CartRepository
+): ViewModel() {
 
-    fun getFoodDetail(foodId: Int) = repository.getFoodDetail(foodId)
-    // fun to get updated quantity
-    // fun to change quantity
+    fun getFoodDetail(foodId: Int) = foodRepository.getFoodDetail(foodId)
 
+    fun addItemToCart(food: Food, quantity: Int) {
+        viewModelScope.launch {
+            cartRepository.addCartItem(food, quantity)
+        }
+    }
 }

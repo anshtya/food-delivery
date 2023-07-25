@@ -1,13 +1,13 @@
-package com.anshtya.fooddelivery.data
+package com.anshtya.fooddelivery.data.repository
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import com.anshtya.fooddelivery.data.local.model.FilterOption
+import com.anshtya.fooddelivery.data.local.model.Food
+import com.anshtya.fooddelivery.data.local.model.SortOption
+import com.anshtya.fooddelivery.data.local.model.foodList
 
-object Repository {
+class FoodRepository {
 
     val list = foodList
-
-    val cartItems: Flow<List<CartItem>> = flow { emit(cart) }
 
     fun getRecommendedList(): List<Food> = foodList.filter { it.rating >= 4 }.take(7)
     fun getFoodDetail(foodId: Int): Food = foodList.find { it.id == foodId }!!
@@ -16,7 +16,4 @@ object Repository {
     fun getSearchResult(list: List<Food>, query: String) = list.filter {
         it.name.contains(query, ignoreCase = true)
     }
-
-
-
 }

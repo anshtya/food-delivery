@@ -2,9 +2,10 @@ package com.anshtya.fooddelivery.ui.screens
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.anshtya.fooddelivery.data.FilterOption
-import com.anshtya.fooddelivery.data.Repository
-import com.anshtya.fooddelivery.data.SortOption
+import com.anshtya.fooddelivery.data.local.model.FilterOption
+import com.anshtya.fooddelivery.data.repository.FoodRepository
+import com.anshtya.fooddelivery.data.local.model.SortOption
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -12,10 +13,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
-class HomeViewModel : ViewModel() {
-
-    private val repository = Repository
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val repository: FoodRepository
+): ViewModel() {
     private val defaultDispatcher = Dispatchers.Default
 
     private val _foodList = repository.list
@@ -61,12 +64,6 @@ class HomeViewModel : ViewModel() {
             repository.getSearchResult(currentList, it)
         } ?: emptyList()
     }.flowOn(defaultDispatcher).stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000L),
-        initialValue = emptyList()
-    )
-
-    val cartItems = repository.cartItems.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000L),
         initialValue = emptyList()

@@ -13,14 +13,17 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.anshtya.fooddelivery.R
 import com.anshtya.fooddelivery.ui.components.FoodDescription
 import com.anshtya.fooddelivery.ui.components.FoodImage
@@ -29,12 +32,26 @@ import com.anshtya.fooddelivery.ui.components.QuantitySelector
 @Composable
 fun FoodDetail(
     foodId: String,
-    foodDetailViewModel: FoodDetailViewModel = viewModel()
+    foodDetailViewModel: FoodDetailViewModel = hiltViewModel()
 ) {
-    val foodItem = remember { foodDetailViewModel.getFoodDetail(foodId.toInt()) }
+    var quantity by remember { mutableStateOf(1) }
+    val food = remember { foodDetailViewModel.getFoodDetail(foodId.toInt()) }
 
     Scaffold(
-        bottomBar = { BottomCartBar() }
+        bottomBar = {
+            BottomCartBar(
+                quantity = quantity,
+                onQuantityIncrease = { quantity++ },
+                onQuantityDecrease = {
+                    if (quantity > 1) {
+                        quantity--
+                    }
+                },
+                onAddToCartClick = {
+                    foodDetailViewModel.addItemToCart(food, quantity)
+                }
+            )
+        }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -42,13 +59,13 @@ fun FoodDetail(
                 .padding(paddingValues)
         ) {
             FoodImage(
-                imageUrl = foodItem.image,
+                imageUrl = food.image,
                 shape = RectangleShape,
                 contentDescription = null,
                 modifier = Modifier.height(200.dp)
             )
             FoodDescription(
-                item = foodItem,
+                item = food,
                 modifier = Modifier.padding(10.dp)
             )
             Divider()
@@ -72,6 +89,10 @@ fun DetailContent(
 
 @Composable
 fun BottomCartBar(
+    quantity: Int,
+    onQuantityIncrease: () -> Unit,
+    onQuantityDecrease: () -> Unit,
+    onAddToCartClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Divider()
@@ -83,12 +104,15 @@ fun BottomCartBar(
             .padding(10.dp)
     ) {
         QuantitySelector(
+            quantity = quantity,
+            onQuantityIncrease = onQuantityIncrease,
+            onQuantityDecrease = onQuantityDecrease,
             modifier = Modifier
                 .fillMaxWidth(0.3F)
                 .height(50.dp)
         )
         Button(
-            onClick = {},
+            onClick = onAddToCartClick,
             shape = RoundedCornerShape(5.dp),
             modifier = Modifier
                 .fillMaxWidth()

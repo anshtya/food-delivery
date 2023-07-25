@@ -1,5 +1,6 @@
-package com.anshtya.fooddelivery.ui.screens.home
+package com.anshtya.fooddelivery.ui.screens.home.cart
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,18 +19,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.anshtya.fooddelivery.R
 import com.anshtya.fooddelivery.ui.components.BottomButton
-import com.anshtya.fooddelivery.ui.screens.HomeViewModel
+import com.anshtya.fooddelivery.ui.components.CartItem
 
 @Composable
 fun Cart(
     onNavigateToRoute: (String) -> Unit,
-    homeViewModel: HomeViewModel = viewModel()
+    cartViewModel: CartViewModel = hiltViewModel()
 ) {
-    val cartItems by homeViewModel.cartItems.collectAsStateWithLifecycle()
+    val cartItems by cartViewModel.cartItems.collectAsStateWithLifecycle()
+    Log.d("lulu", "$cartItems")
     Scaffold(
         bottomBar = { CartBottomBar() }
     ) { paddingValues ->
@@ -43,10 +45,14 @@ fun Cart(
             items(
                 items = cartItems,
                 key = { cartItems ->
-                    cartItems.food.id
+                    cartItems.id
                 }
-            ) {
-
+            ) { cartItem ->
+                CartItem(
+                    cartItem = cartItem,
+                    onQuantityDecrease = { cartViewModel.decreaseQuantity(cartItem.foodId) },
+                    onQuantityIncrease = { cartViewModel.increaseQuantity(cartItem.foodId) }
+                )
             }
         }
     }

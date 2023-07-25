@@ -20,6 +20,9 @@ import com.anshtya.fooddelivery.R
 
 @Composable
 fun QuantitySelector(
+    quantity: Int,
+    onQuantityIncrease: () -> Unit,
+    onQuantityDecrease: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -36,14 +39,14 @@ fun QuantitySelector(
                 painter = painterResource(R.drawable.ic_remove_24),
                 contentDescription = null,
                 tint = Color.Blue,
-                modifier = Modifier.noRippleClickable { }
+                modifier = Modifier.noRippleClickable { onQuantityDecrease() }
             )
-            Text("1")
+            Text(quantity.toString())
             Icon(
                 imageVector = Icons.Default.Add,
                 contentDescription = null,
                 tint = Color.Blue,
-                modifier = Modifier.noRippleClickable { }
+                modifier = Modifier.noRippleClickable { onQuantityIncrease() }
             )
         }
     }
