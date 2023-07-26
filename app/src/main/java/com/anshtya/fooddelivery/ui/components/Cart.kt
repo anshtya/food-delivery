@@ -9,12 +9,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.anshtya.fooddelivery.R
 import com.anshtya.fooddelivery.data.local.CartEntity
-import java.text.DecimalFormat
 
 @Composable
 fun CartItem(
@@ -23,7 +23,6 @@ fun CartItem(
     onQuantityIncrease: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val df = remember { DecimalFormat("#.##") }
     Surface(
         shape = RoundedCornerShape(5.dp),
         modifier = modifier.fillMaxWidth()
@@ -43,7 +42,7 @@ fun CartItem(
                 )
 
                 Text(
-                    text = cartItem.foodPrice.toString()
+                    text = stringResource(R.string.price, cartItem.foodPrice)
                 )
             }
 
@@ -60,7 +59,7 @@ fun CartItem(
                 )
 
                 Text(
-                    text = df.format(cartItem.totalPrice)
+                    text = stringResource(R.string.price, cartItem.totalPrice)
                 )
             }
         }

@@ -10,6 +10,12 @@ class CartRepository @Inject constructor(
 ) {
     val cartItems = cartDao.getCartItems()
 
+    val cartNotEmpty = cartDao.checkCartIsNotEmpty()
+
+    val totalPrice = cartDao.getTotalPrice()
+
+    val totalItems = cartDao.getTotalItems()
+
     suspend fun addCartItem(food: Food, quantity: Int) {
         if (cartDao.checkItemExist(food.id)) {
             val cartItem = cartDao.getCartItem(food.id)

@@ -1,4 +1,4 @@
-package com.anshtya.fooddelivery.ui.screens.home.cart
+package com.anshtya.fooddelivery.ui.screens.cart
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

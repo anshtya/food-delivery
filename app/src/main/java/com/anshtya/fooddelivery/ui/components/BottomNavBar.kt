@@ -39,7 +39,7 @@ fun FoodDeliveryBottomNavBar(
 @Composable
 fun BottomNavBarPreview() {
     FoodDeliveryBottomNavBar(
-        currentRoute = HomeSections.CART.route,
+        currentRoute = HomeSections.FEED.route,
         onNavigateToRoute = {}
     )
 }

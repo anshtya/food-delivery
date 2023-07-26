@@ -14,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.anshtya.fooddelivery.ui.screens.fooddetail.FoodDetail
 import com.anshtya.fooddelivery.ui.screens.home.HomeSections
+import com.anshtya.fooddelivery.ui.screens.cart.Cart
 import com.anshtya.fooddelivery.ui.screens.home.homeGraph
 import com.anshtya.fooddelivery.ui.theme.FoodDeliveryTheme
 
@@ -21,6 +22,7 @@ object Destinations {
     const val HOME_ROUTE = "home"
     const val FOOD_DETAIL_ROUTE = "food"
     const val FOOD_ID = "foodId"
+    const val CART_ROUTE = "cart"
 }
 
 @Composable
@@ -45,6 +47,9 @@ fun FoodDeliveryApp() {
                         },
                         onNavigateToRoute = {
                             navController.navigateToBottomBarRoute(it)
+                        },
+                        onNavigateToCart = {
+                            navController.navigate(Destinations.CART_ROUTE)
                         }
                     )
                 }
@@ -53,6 +58,13 @@ fun FoodDeliveryApp() {
                 ) { backStackEntry ->
                     FoodDetail(
                         foodId = backStackEntry.arguments?.getString(Destinations.FOOD_ID) ?: ""
+                    )
+                }
+                composable(
+                    route = Destinations.CART_ROUTE
+                ) {
+                    Cart(
+                        onNavigateBack = { navController.popBackStack() }
                     )
                 }
             }

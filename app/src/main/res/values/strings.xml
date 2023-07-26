@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">Food Delivery</string>
+    <string name="back">Back</string>
     <string name="home_feed">Home</string>
-    <string name="home_cart">Cart</string>
+    <string name="price">$%.2f</string>
+    <string name="cart">Cart</string>
     <string name="home_search">Search</string>
     <string name="recommended">Recommended for you</string>
     <string name="search_food">Search Food</string>
@@ -11,5 +13,7 @@
     <string name="no_results">No results</string>
     <string name="add_to_cart">Add To Cart</string>
     <string name="checkout">Proceed to Checkout</string>
+    <string name="total_items_added">%d Items Added</string>
+    <string name="view_cart">View Cart</string>
     <string name="detail_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
 </resources>

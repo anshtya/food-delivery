@@ -21,6 +21,12 @@ interface CartDao {
     @Query("SELECT * FROM food_cart WHERE foodId =:itemId")
     suspend fun getCartItem(itemId: Int): CartEntity
 
+    @Query("SELECT SUM(totalPrice) FROM food_cart")
+    fun getTotalPrice(): Flow<Double>
+
+    @Query("SELECT SUM(quantity) FROM food_cart")
+    fun getTotalItems(): Flow<Int>
+
     @Insert
     suspend fun insertCartItem(cartItem: CartEntity)
 

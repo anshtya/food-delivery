@@ -22,12 +22,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.anshtya.fooddelivery.R
 import com.anshtya.fooddelivery.data.local.model.Food
 import com.anshtya.fooddelivery.data.local.model.foodList
 import com.anshtya.fooddelivery.ui.theme.ratingGreenColor
@@ -84,7 +86,7 @@ fun FoodDescription(
             rating = item.rating
         )
         Text(
-            text = "$${item.price}",
+            text = stringResource(R.string.price, item.price),
             style = MaterialTheme.typography.titleSmall
         )
         if (item.type.isNotEmpty()) {
