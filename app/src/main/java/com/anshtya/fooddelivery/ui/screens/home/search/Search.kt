@@ -37,6 +37,7 @@ import com.anshtya.fooddelivery.ui.components.FoodDeliverySearchBar
 import com.anshtya.fooddelivery.ui.components.FoodItem
 import com.anshtya.fooddelivery.ui.components.SortOptionBottomSheet
 import com.anshtya.fooddelivery.ui.screens.home.HomeSections
+import com.anshtya.fooddelivery.ui.util.Option
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -192,5 +193,3 @@ fun Search(
         }
     }
 }
-
-enum class Option { SORT, FILTER }
