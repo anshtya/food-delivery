@@ -1,4 +1,4 @@
-package com.anshtya.fooddelivery.ui.screens.home
+package com.anshtya.fooddelivery.ui.screens.home.search
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
@@ -36,7 +36,7 @@ import com.anshtya.fooddelivery.ui.components.FoodDeliveryBottomNavBar
 import com.anshtya.fooddelivery.ui.components.FoodDeliverySearchBar
 import com.anshtya.fooddelivery.ui.components.FoodItem
 import com.anshtya.fooddelivery.ui.components.SortOptionBottomSheet
-import com.anshtya.fooddelivery.ui.screens.HomeViewModel
+import com.anshtya.fooddelivery.ui.screens.home.HomeSections
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,18 +44,18 @@ fun Search(
     onFoodClick: (Int) -> Unit,
     onNavigateToRoute: (String) -> Unit,
     modifier: Modifier = Modifier,
-    homeViewModel: HomeViewModel = hiltViewModel()
+    searchViewModel: SearchViewModel = hiltViewModel()
 ) {
     var selectedSheetContent by remember { mutableStateOf(Option.SORT) }
-    val sortOptions = remember { homeViewModel.getSortOptions() }
-    val filterOptions = remember { homeViewModel.getFilterOptions() }
+    val sortOptions = remember { searchViewModel.getSortOptions() }
+    val filterOptions = remember { searchViewModel.getFilterOptions() }
     var isBottomSheetOpen by remember { mutableStateOf(false) }
 
-    val foodItems by homeViewModel.filteredAndSortedList.collectAsStateWithLifecycle()
-    val searchResults by homeViewModel.searchResults.collectAsStateWithLifecycle()
-    val selectedSortOption by homeViewModel.sortOption.collectAsStateWithLifecycle()
-    val selectedFilterOptions by homeViewModel.filterOptions.collectAsStateWithLifecycle()
-    val searchQuery by homeViewModel.searchQuery.collectAsStateWithLifecycle()
+    val foodItems by searchViewModel.filteredAndSortedList.collectAsStateWithLifecycle()
+    val searchResults by searchViewModel.searchResults.collectAsStateWithLifecycle()
+    val selectedSortOption by searchViewModel.sortOption.collectAsStateWithLifecycle()
+    val selectedFilterOptions by searchViewModel.filterOptions.collectAsStateWithLifecycle()
+    val searchQuery by searchViewModel.searchQuery.collectAsStateWithLifecycle()
 
     BackHandler(isBottomSheetOpen) {
         isBottomSheetOpen = false
@@ -76,8 +76,8 @@ fun Search(
         ) {
             FoodDeliverySearchBar(
                 text = searchQuery,
-                onValueChange = { homeViewModel.updateSearchQuery(it) },
-                onClearText = { homeViewModel.clearSearchQuery() },
+                onValueChange = { searchViewModel.updateSearchQuery(it) },
+                onClearText = { searchViewModel.clearSearchQuery() },
                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)
             )
 
@@ -172,8 +172,8 @@ fun Search(
                         SortOptionBottomSheet(
                             sortOptions = sortOptions,
                             selectedSortOption = selectedSortOption,
-                            onApplySortOption = { homeViewModel.applySortOption(it) },
-                            onClearSortOption = { homeViewModel.clearSortOption() },
+                            onApplySortOption = { searchViewModel.applySortOption(it) },
+                            onClearSortOption = { searchViewModel.clearSortOption() },
                             modifier = modifier.height(250.dp)
                         )
                     }
@@ -182,8 +182,8 @@ fun Search(
                         FilterOptionsBottomSheet(
                             filterOptions = filterOptions,
                             selectedFilterOptions = selectedFilterOptions,
-                            onFilterOptionClick = { homeViewModel.setFilterOption(it) },
-                            onClearFilterOption = { homeViewModel.clearFilterOptions() },
+                            onFilterOptionClick = { searchViewModel.setFilterOption(it) },
+                            onClearFilterOption = { searchViewModel.clearFilterOptions() },
                             modifier = modifier.height(250.dp)
                         )
                     }

@@ -13,6 +13,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.anshtya.fooddelivery.R
 import com.anshtya.fooddelivery.ui.screens.home.cart.Cart
+import com.anshtya.fooddelivery.ui.screens.home.feed.Feed
+import com.anshtya.fooddelivery.ui.screens.home.search.Search
 
 enum class HomeSections(
     @StringRes val title: Int,
