@@ -5,17 +5,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navigation
 import com.anshtya.fooddelivery.ui.screens.fooddetail.FoodDetail
-import com.anshtya.fooddelivery.ui.screens.home.HomeSections
 import com.anshtya.fooddelivery.ui.screens.cart.Cart
-import com.anshtya.fooddelivery.ui.screens.home.homeGraph
+import com.anshtya.fooddelivery.ui.screens.home.Home
 import com.anshtya.fooddelivery.ui.theme.FoodDeliveryTheme
 
 object Destinations {
@@ -37,20 +33,12 @@ fun FoodDeliveryApp() {
                 navController = navController,
                 startDestination = Destinations.HOME_ROUTE
             ) {
-                navigation(
+                composable(
                     route = Destinations.HOME_ROUTE,
-                    startDestination = HomeSections.FEED.route
                 ) {
-                    homeGraph(
-                        onFoodClick = { id ->
-                            navController.navigateToFoodDetail(id)
-                        },
-                        onNavigateToRoute = {
-                            navController.navigateToBottomBarRoute(it)
-                        },
-                        onNavigateToCart = {
-                            navController.navigate(Destinations.CART_ROUTE)
-                        }
+                    Home(
+                        onFoodClick = { navController.navigateToFoodDetail(it) },
+                        onCartClick = { navController.navigate(Destinations.CART_ROUTE) }
                     )
                 }
                 composable(
@@ -72,13 +60,6 @@ fun FoodDeliveryApp() {
     }
 }
 
-fun NavController.navigateToBottomBarRoute(route: String) {
-    navigate(route) {
-        popUpTo(graph.findStartDestination().id)
-        launchSingleTop = true
-    }
-}
-
-fun NavController.navigateToFoodDetail(id: Int) {
+fun NavHostController.navigateToFoodDetail(id: Int) {
     navigate("${Destinations.FOOD_DETAIL_ROUTE}/${id}")
 }

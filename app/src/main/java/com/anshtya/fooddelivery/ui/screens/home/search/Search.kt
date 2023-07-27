@@ -17,7 +17,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,18 +31,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.anshtya.fooddelivery.R
 import com.anshtya.fooddelivery.data.local.model.SortOption
 import com.anshtya.fooddelivery.ui.components.FilterOptionsBottomSheet
-import com.anshtya.fooddelivery.ui.components.FoodDeliveryBottomNavBar
 import com.anshtya.fooddelivery.ui.components.FoodDeliverySearchBar
 import com.anshtya.fooddelivery.ui.components.FoodItem
 import com.anshtya.fooddelivery.ui.components.SortOptionBottomSheet
-import com.anshtya.fooddelivery.ui.screens.home.HomeSections
 import com.anshtya.fooddelivery.ui.util.Option
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Search(
     onFoodClick: (Int) -> Unit,
-    onNavigateToRoute: (String) -> Unit,
     modifier: Modifier = Modifier,
     searchViewModel: SearchViewModel = hiltViewModel()
 ) {
@@ -62,98 +58,76 @@ fun Search(
         isBottomSheetOpen = false
     }
 
-    Scaffold(
-        bottomBar = {
-            FoodDeliveryBottomNavBar(
-                currentRoute = HomeSections.SEARCH.route,
-                onNavigateToRoute = onNavigateToRoute
+    Column(modifier.fillMaxSize()) {
+        FoodDeliverySearchBar(
+            text = searchQuery,
+            onValueChange = { searchViewModel.updateSearchQuery(it) },
+            onClearText = { searchViewModel.clearSearchQuery() },
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)
+        )
+
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(5.dp),
+            modifier = Modifier.padding(horizontal = 10.dp)
+        ) {
+            FilterChip(
+                selected = selectedSortOption != SortOption.Default,
+                label = {
+                    Text(
+                        text = stringResource(R.string.sort)
+                    )
+                },
+                onClick = {
+                    selectedSheetContent = Option.SORT
+                    isBottomSheetOpen = true
+                },
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowDown,
+                        contentDescription = null
+                    )
+                }
+            )
+
+            FilterChip(
+                selected = selectedFilterOptions.isNotEmpty(),
+                label = {
+                    Text(
+                        text = stringResource(R.string.filter)
+                    )
+                },
+                onClick = {
+                    selectedSheetContent = Option.FILTER
+                    isBottomSheetOpen = true
+                },
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowDown,
+                        contentDescription = null
+                    )
+                }
             )
         }
-    ) { paddingValues ->
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(paddingValues)
+
+        LazyColumn(
+            contentPadding = PaddingValues(10.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            FoodDeliverySearchBar(
-                text = searchQuery,
-                onValueChange = { searchViewModel.updateSearchQuery(it) },
-                onClearText = { searchViewModel.clearSearchQuery() },
-                modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)
-            )
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(5.dp),
-                modifier = Modifier.padding(horizontal = 10.dp)
-            ) {
-                FilterChip(
-                    selected = selectedSortOption != SortOption.Default,
-                    label = {
-                        Text(
-                            text = stringResource(R.string.sort)
-                        )
-                    },
-                    onClick = {
-                        selectedSheetContent = Option.SORT
-                        isBottomSheetOpen = true
-                    },
-                    trailingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.KeyboardArrowDown,
-                            contentDescription = null
-                        )
-                    }
-                )
-
-                FilterChip(
-                    selected = selectedFilterOptions.isNotEmpty(),
-                    label = {
-                        Text(
-                            text = stringResource(R.string.filter)
-                        )
-                    },
-                    onClick = {
-                        selectedSheetContent = Option.FILTER
-                        isBottomSheetOpen = true
-                    },
-                    trailingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.KeyboardArrowDown,
-                            contentDescription = null
-                        )
-                    }
-                )
-            }
-
-            LazyColumn(
-                contentPadding = PaddingValues(10.dp),
-                verticalArrangement = Arrangement.spacedBy(20.dp)
-            ) {
-                if (searchQuery.isNotEmpty()) {
-                    if (searchResults.isEmpty()) {
-                        item {
-                            Row(
-                                horizontalArrangement = Arrangement.Center,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(
-                                    stringResource(R.string.no_results)
-                                )
-                            }
-                        }
-                    } else {
-                        items(
-                            items = searchResults
-                        ) { item ->
-                            FoodItem(
-                                item = item,
-                                onFoodClick = onFoodClick
+            if (searchQuery.isNotEmpty()) {
+                if (searchResults.isEmpty()) {
+                    item {
+                        Row(
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                stringResource(R.string.no_results)
                             )
                         }
                     }
                 } else {
                     items(
-                        items = foodItems
+                        items = searchResults
                     ) { item ->
                         FoodItem(
                             item = item,
@@ -161,33 +135,42 @@ fun Search(
                         )
                     }
                 }
+            } else {
+                items(
+                    items = foodItems
+                ) { item ->
+                    FoodItem(
+                        item = item,
+                        onFoodClick = onFoodClick
+                    )
+                }
             }
         }
+    }
 
-        if (isBottomSheetOpen) {
-            ModalBottomSheet(
-                onDismissRequest = { isBottomSheetOpen = false }
-            ) {
-                when (selectedSheetContent) {
-                    Option.SORT -> {
-                        SortOptionBottomSheet(
-                            sortOptions = sortOptions,
-                            selectedSortOption = selectedSortOption,
-                            onApplySortOption = { searchViewModel.applySortOption(it) },
-                            onClearSortOption = { searchViewModel.clearSortOption() },
-                            modifier = modifier.height(250.dp)
-                        )
-                    }
+    if (isBottomSheetOpen) {
+        ModalBottomSheet(
+            onDismissRequest = { isBottomSheetOpen = false }
+        ) {
+            when (selectedSheetContent) {
+                Option.SORT -> {
+                    SortOptionBottomSheet(
+                        sortOptions = sortOptions,
+                        selectedSortOption = selectedSortOption,
+                        onApplySortOption = { searchViewModel.applySortOption(it) },
+                        onClearSortOption = { searchViewModel.clearSortOption() },
+                        modifier = modifier.height(250.dp)
+                    )
+                }
 
-                    Option.FILTER -> {
-                        FilterOptionsBottomSheet(
-                            filterOptions = filterOptions,
-                            selectedFilterOptions = selectedFilterOptions,
-                            onFilterOptionClick = { searchViewModel.setFilterOption(it) },
-                            onClearFilterOption = { searchViewModel.clearFilterOptions() },
-                            modifier = modifier.height(250.dp)
-                        )
-                    }
+                Option.FILTER -> {
+                    FilterOptionsBottomSheet(
+                        filterOptions = filterOptions,
+                        selectedFilterOptions = selectedFilterOptions,
+                        onFilterOptionClick = { searchViewModel.setFilterOption(it) },
+                        onClearFilterOption = { searchViewModel.clearFilterOptions() },
+                        modifier = modifier.height(250.dp)
+                    )
                 }
             }
         }

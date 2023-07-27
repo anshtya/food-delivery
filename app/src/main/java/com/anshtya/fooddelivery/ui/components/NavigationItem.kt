@@ -15,11 +15,10 @@ import com.anshtya.fooddelivery.ui.screens.home.HomeSections
 @Composable
 fun FoodDeliveryNavigationItem(
     item: HomeSections,
-    currentDestination: String?,
+    selected: Boolean,
     onNavigateToRoute: () -> Unit
 ) {
-    val itemSelected = currentDestination == item.route
-    if (itemSelected) {
+    if (selected) {
         Icon(
             imageVector = item.selectedIcon,
             contentDescription = stringResource(item.title),

@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,12 +24,12 @@ import com.anshtya.fooddelivery.ui.util.SnackbarData
 
 @Composable
 fun FoodDeliverySnackbar(
-    snackbarHostState: SnackbarHostState,
+//    snackbarHostState: SnackbarHostState,
     snackbarData: SnackbarData,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    SnackbarHost(snackbarHostState) {
+//    SnackbarHost(snackbarHostState) {
         Surface(
             shape = RoundedCornerShape(10.dp),
             shadowElevation = 5.dp,
@@ -78,5 +76,5 @@ fun FoodDeliverySnackbar(
                 }
             }
         }
-    }
+//    }
 }
