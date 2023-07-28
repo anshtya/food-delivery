@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.anshtya.fooddelivery.R
+import com.anshtya.fooddelivery.ui.util.noRippleClickable
 
 @Composable
 fun FoodDeliverySearchBar(

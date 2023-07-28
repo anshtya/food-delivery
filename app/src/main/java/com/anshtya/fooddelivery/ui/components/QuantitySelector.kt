@@ -8,15 +8,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.anshtya.fooddelivery.R
+import com.anshtya.fooddelivery.ui.util.noRippleClickable
 
 @Composable
 fun QuantitySelector(
@@ -27,7 +28,11 @@ fun QuantitySelector(
 ) {
     Surface(
         shape = RoundedCornerShape(5.dp),
-        border = BorderStroke(1.dp, Color.Blue),
+        color = MaterialTheme.colorScheme.secondaryContainer,
+        border = BorderStroke(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.secondary
+        ),
         modifier = modifier
     ) {
         Row(
@@ -38,14 +43,14 @@ fun QuantitySelector(
             Icon(
                 painter = painterResource(R.drawable.ic_remove_24),
                 contentDescription = null,
-                tint = Color.Blue,
+                tint = MaterialTheme.colorScheme.onSecondaryContainer,
                 modifier = Modifier.noRippleClickable { onQuantityDecrease() }
             )
             Text(quantity.toString())
             Icon(
                 imageVector = Icons.Default.Add,
                 contentDescription = null,
-                tint = Color.Blue,
+                tint = MaterialTheme.colorScheme.onSecondaryContainer,
                 modifier = Modifier.noRippleClickable { onQuantityIncrease() }
             )
         }

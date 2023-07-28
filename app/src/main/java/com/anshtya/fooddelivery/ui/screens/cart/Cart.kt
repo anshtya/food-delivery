@@ -29,7 +29,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.anshtya.fooddelivery.R
 import com.anshtya.fooddelivery.ui.components.BottomButton
 import com.anshtya.fooddelivery.ui.components.CartItem
-import com.anshtya.fooddelivery.ui.components.noRippleClickable
+import com.anshtya.fooddelivery.ui.util.noRippleClickable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

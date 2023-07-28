@@ -33,6 +33,7 @@ import com.anshtya.fooddelivery.R
 import com.anshtya.fooddelivery.data.local.model.Food
 import com.anshtya.fooddelivery.data.local.model.foodList
 import com.anshtya.fooddelivery.ui.theme.ratingGreenColor
+import com.anshtya.fooddelivery.ui.util.noRippleClickable
 
 @Composable
 fun FoodItem(
@@ -42,6 +43,7 @@ fun FoodItem(
 ) {
     Surface(
         shape = RoundedCornerShape(10.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant,
         shadowElevation = 5.dp,
         modifier = modifier
             .height(180.dp)
