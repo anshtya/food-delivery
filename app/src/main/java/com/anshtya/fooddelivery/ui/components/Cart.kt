@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
@@ -29,6 +30,7 @@ fun CartItem(
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
                 .fillMaxWidth()
                 .padding(5.dp)
@@ -55,7 +57,9 @@ fun CartItem(
                     quantity = cartItem.quantity,
                     onQuantityIncrease = onQuantityIncrease,
                     onQuantityDecrease = onQuantityDecrease,
-                    modifier = Modifier.fillMaxWidth(0.4F)
+                    modifier = Modifier
+                        .fillMaxWidth(0.5F)
+                        .height(40.dp)
                 )
 
                 Text(

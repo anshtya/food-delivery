@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,9 +20,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -35,6 +38,7 @@ import com.anshtya.fooddelivery.ui.components.FoodDeliverySearchBar
 import com.anshtya.fooddelivery.ui.components.FoodItem
 import com.anshtya.fooddelivery.ui.components.SortOptionBottomSheet
 import com.anshtya.fooddelivery.ui.util.Option
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,9 +48,11 @@ fun Search(
     searchViewModel: SearchViewModel = hiltViewModel()
 ) {
     var selectedSheetContent by remember { mutableStateOf(Option.SORT) }
+    var isBottomSheetOpen by remember { mutableStateOf(false) }
     val sortOptions = remember { searchViewModel.getSortOptions() }
     val filterOptions = remember { searchViewModel.getFilterOptions() }
-    var isBottomSheetOpen by remember { mutableStateOf(false) }
+    val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
 
     val foodItems by searchViewModel.filteredAndSortedList.collectAsStateWithLifecycle()
     val searchResults by searchViewModel.searchResults.collectAsStateWithLifecycle()
@@ -56,6 +62,14 @@ fun Search(
 
     BackHandler(isBottomSheetOpen) {
         isBottomSheetOpen = false
+    }
+
+    LaunchedEffect(foodItems) {
+        if (isBottomSheetOpen && (selectedFilterOptions.isNotEmpty() || selectedSortOption != SortOption.Default)) {
+            scope.launch {
+                listState.scrollToItem(index = 0)
+            }
+        }
     }
 
     Column(modifier.fillMaxSize()) {
@@ -110,6 +124,7 @@ fun Search(
         }
 
         LazyColumn(
+            state = listState,
             contentPadding = PaddingValues(10.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {

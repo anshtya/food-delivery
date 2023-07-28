@@ -5,8 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.anshtya.fooddelivery.data.local.model.FilterOption
 import com.anshtya.fooddelivery.data.local.model.SortOption
 import com.anshtya.fooddelivery.data.repository.FoodRepository
+import com.anshtya.fooddelivery.di.DefaultDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,9 +18,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val foodRepository: FoodRepository
+    private val foodRepository: FoodRepository,
+    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher
 ): ViewModel() {
-    private val defaultDispatcher = Dispatchers.Default
 
     private val _foodList = foodRepository.list
 
