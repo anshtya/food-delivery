@@ -120,7 +120,10 @@ fun HomeNavGraph(
 
 fun NavHostController.navigateToBottomBarRoute(route: String) {
     navigate(route) {
-        popUpTo(graph.findStartDestination().id)
+        popUpTo(graph.findStartDestination().id) {
+            saveState = true
+        }
         launchSingleTop = true
+        restoreState = true
     }
 }
