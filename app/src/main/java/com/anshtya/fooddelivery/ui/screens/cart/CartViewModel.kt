@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.anshtya.fooddelivery.data.repository.CartRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,6 +19,12 @@ class CartViewModel @Inject constructor(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000L),
         initialValue = emptyList()
+    )
+
+    val cartNotEmpty = repository.cartNotEmpty.shareIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000L),
+        replay = 1
     )
 
     fun increaseQuantity(foodId: Int) {

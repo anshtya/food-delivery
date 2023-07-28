@@ -94,7 +94,6 @@ fun FoodDescription(
         if (item.type.isNotEmpty()) {
             Text(
                 text = item.type,
-                color = Color.Gray,
                 style = MaterialTheme.typography.bodyMedium
             )
         }
