@@ -1,4 +1,6 @@
-<img src="./img/icon/food-delivery.png" width="200" />
+<p align="center">
+  <img src="./img/icon/food-delivery.png" width="200" />
+</p>
 
 # food-delivery
 A Food Delivery UI created using Jetpack Compose. Designed using Material 3 components.
