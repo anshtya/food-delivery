@@ -8,7 +8,6 @@ A Food Delivery UI created using Jetpack Compose. Designed using Material 3 comp
 ## ✨ Features
 - Sort and filter food items
 - Search food
-- Persistently save items in cart
 
 ## 📸 Screenshots
 |||||
